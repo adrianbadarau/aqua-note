@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,9 +51,19 @@ class Genus
     private $isPublished = false;
 
     /**
+     * @var $notes GenusNote[]
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
      */
     private $notes;
+
+    /**
+     * Genus constructor.
+     */
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -158,20 +169,11 @@ class Genus
     }
 
     /**
-     * @return GenusNote[]
+     * @return ArrayCollection<GenusNote>
      */
     public function getNotes()
     {
         return $this->notes;
     }
-
-    /**
-     * @param GenusNote[] $notes
-     */
-    public function setNotes(array $notes)
-    {
-        $this->notes = $notes;
-    }
-
 
 }
