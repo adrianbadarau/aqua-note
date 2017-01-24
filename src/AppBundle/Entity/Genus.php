@@ -53,6 +53,7 @@ class Genus
     /**
      * @var $notes GenusNote[]
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
+     * @ORM\OrderBy({"createdAt"="DESC"})
      */
     private $notes;
 
