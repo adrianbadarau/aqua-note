@@ -43,6 +43,13 @@ class Genus
     private $funFact;
 
     /**
+     * @var $isPublished boolean
+     *
+     * @ORM\Column(type="boolean", options={"default":false})
+     */
+    private $isPublished;
+
+    /**
      * Get id
      *
      * @return int
@@ -128,4 +135,22 @@ class Genus
     {
         return new \DateTime("-".rand(0,10)." days");
     }
+
+    /**
+     * @return bool
+     */
+    public function isIsPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    /**
+     * @param bool $isPublished
+     */
+    public function setIsPublished(bool $isPublished)
+    {
+        $this->isPublished = $isPublished;
+    }
+
+
 }

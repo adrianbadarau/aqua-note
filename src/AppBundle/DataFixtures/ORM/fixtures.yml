@@ -1,0 +1,7 @@
+AppBundle\Entity\Genus:
+  genus_{1..10}:
+    name: <genus()>
+    subFamiliy: <text(20)>
+    speciesCount: <numberBetween(100, 1000000)>
+    funFact: <sentence()>
+    isPublished: <boolean(75)>
