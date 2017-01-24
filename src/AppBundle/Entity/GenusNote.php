@@ -52,6 +52,7 @@ class GenusNote
     /**
      * @var $genus Genus
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Genus")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $genus;
 
