@@ -71,6 +71,10 @@ class GenusController extends Controller
         }
 
         $newNotes = $this->getDoctrine()->getRepository("AppBundle:GenusNote")->findAllRecentNotesForGenus($genus);
+
+        $genus->setFunFact(
+            $this->get('app.markdown_transformer')->parse($genus->getFunFact())
+        );
 //        $funFact = "Octopuses can change the color of their body in just *three-tenths* of a second!";
 //        $cache = $this->get('doctrine_cache.providers.my_markdown_cache');
 //        $key = md5($funFact);
