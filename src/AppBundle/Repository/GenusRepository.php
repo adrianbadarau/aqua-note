@@ -1,6 +1,8 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Genus;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * GenusRepository
@@ -10,4 +12,15 @@ namespace AppBundle\Repository;
  */
 class GenusRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return Genus[]
+     */
+    public function findAllPublishedOrderedBySize() : array
+    {
+        $query = $this->createQueryBuilder('genus');
+        $query->andWhere('genus.isPublished = :published');
+        $query->setParameter('published', true);
+        $query->addOrderBy('genus.speciesCount', 'DESC');
+        return $query->getQuery()->execute();
+    }
 }
