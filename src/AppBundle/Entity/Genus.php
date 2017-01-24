@@ -28,6 +28,21 @@ class Genus
     private $name;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $subFamiliy;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $speciesCount;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $funFact;
+
+    /**
      * Get id
      *
      * @return int
@@ -59,5 +74,53 @@ class Genus
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubFamiliy()
+    {
+        return $this->subFamiliy;
+    }
+
+    /**
+     * @param mixed $subFamiliy
+     */
+    public function setSubFamiliy($subFamiliy)
+    {
+        $this->subFamiliy = $subFamiliy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpeciesCount()
+    {
+        return $this->speciesCount;
+    }
+
+    /**
+     * @param mixed $speciesCount
+     */
+    public function setSpeciesCount($speciesCount)
+    {
+        $this->speciesCount = $speciesCount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFunFact()
+    {
+        return $this->funFact;
+    }
+
+    /**
+     * @param mixed $funFact
+     */
+    public function setFunFact($funFact)
+    {
+        $this->funFact = $funFact;
     }
 }
