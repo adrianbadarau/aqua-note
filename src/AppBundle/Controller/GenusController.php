@@ -47,7 +47,7 @@ class GenusController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $genusRepository = $em->getRepository("AppBundle:Genus");
-        $genuses = $genusRepository->findAllPublishedOrderedBySize();
+        $genuses = $genusRepository->findAllOrderedByRecentNote();
 
         return $this->render("AppBundle:genus:list.html.twig",[
             'genuses' => $genuses,
@@ -70,10 +70,7 @@ class GenusController extends Controller
             throw $this->createNotFoundException('Genus not found');
         }
 
-        $newNotes = $genus->getNotes()
-            ->filter(function (GenusNote $note){
-                return $note->getCreatedAt() > new \DateTime('-3 months');
-            });
+        $newNotes = $this->getDoctrine()->getRepository("AppBundle:GenusNote")->findAllRecentNotesForGenus($genus);
 //        $funFact = "Octopuses can change the color of their body in just *three-tenths* of a second!";
 //        $cache = $this->get('doctrine_cache.providers.my_markdown_cache');
 //        $key = md5($funFact);

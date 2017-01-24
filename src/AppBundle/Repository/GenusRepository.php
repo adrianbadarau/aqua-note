@@ -23,4 +23,14 @@ class GenusRepository extends \Doctrine\ORM\EntityRepository
         $query->addOrderBy('genus.speciesCount', 'DESC');
         return $query->getQuery()->execute();
     }
+
+    public function findAllOrderedByRecentNote() : array
+    {
+        return $this->createQueryBuilder('genus')
+            ->andWhere('genus.isPublished = :published')
+            ->setParameter('published', true)
+            ->join('genus.notes','genusNote')
+            ->orderBy('genusNote.createdAt','DESC')
+            ->getQuery()->execute();
+    }
 }
