@@ -47,7 +47,12 @@ class Genus
      *
      * @ORM\Column(type="boolean", options={"default":false})
      */
-    private $isPublished;
+    private $isPublished = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
+     */
+    private $notes;
 
     /**
      * Get id
@@ -150,6 +155,22 @@ class Genus
     public function setIsPublished(bool $isPublished)
     {
         $this->isPublished = $isPublished;
+    }
+
+    /**
+     * @return GenusNote[]
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param GenusNote[] $notes
+     */
+    public function setNotes(array $notes)
+    {
+        $this->notes = $notes;
     }
 
 

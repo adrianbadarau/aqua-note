@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genus;
+use AppBundle\Entity\GenusNote;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,10 +21,20 @@ class GenusController extends Controller
     {
         $genus = new Genus();
         $genus->setName('Octopus'.rand(0,100));
-        $genus->setSpeciesCount(rand(1,1000));
+        $genus->setSpeciesCount(rand(1,10000));
         $genus->setSubFamiliy('Octopodinae');
+        $genus->setIsPublished(true);
+
+        $note = new GenusNote();
+        $note->setUsername('AquaWeaver');
+        $note->setUserAvatarFilename('ryan.jpeg');
+        $note->setNote('I counted 8 legs... as they wrapped around me');
+        $note->setCreatedAt(new \DateTime('-1 month'));
+        $note->setGenus($genus);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($genus);
+        $em->persist($note);
         $em->flush();
 
         return new Response("Genus created");
