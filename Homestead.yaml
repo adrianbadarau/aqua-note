@@ -16,11 +16,12 @@ folders:
       to: "/home/vagrant/aqua-note"
 
 sites:
-    - map: homestead.app
-      to: "/home/vagrant/aqua-note/public"
+    - map: aqua-note.app
+      to: "/home/vagrant/aqua-note/web"
+      type: symfony
 
 databases:
-    - homestead
+    - aquanote
 
 # blackfire:
 #     - id: foo
