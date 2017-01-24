@@ -19,6 +19,7 @@ class AppKernel extends Kernel
              * Vendor Bundles
             **/
             new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
+            new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             /**
              * Application Bundles
             **/
