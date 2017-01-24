@@ -13,6 +13,23 @@ class GenusController extends Controller
 {
 
     /**
+     * @Route("/genus/new", name="genus_new")
+     * @Method("POST")
+     **/
+    public function newAction()
+    {
+        $genus = new Genus();
+        $genus->setName('Octopus'.rand(0,100));
+        $genus->setSpeciesCount(rand(1,1000));
+        $genus->setSubFamiliy('Octopodinae');
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($genus);
+        $em->flush();
+
+        return new Response("Genus created");
+    }
+
+    /**
      * @Route("/genus/{name}")
      * @param string $name
      * @return Response
@@ -53,20 +70,6 @@ class GenusController extends Controller
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/genus/new", name="genus_new")
-     * @Method("POST")
-     **/
-    public function newAction()
-    {
-        $genus = new Genus();
-        $genus->setName('Octopus'.rand(0,100));
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($genus);
-        $em->flush();
-
-        return new Response("Genus created");
-    }
 
 
 }
