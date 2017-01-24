@@ -169,7 +169,7 @@ class Genus
     }
 
     /**
-     * @return ArrayCollection<GenusNote>
+     * @return ArrayCollection|GenusNote[]
      */
     public function getNotes()
     {

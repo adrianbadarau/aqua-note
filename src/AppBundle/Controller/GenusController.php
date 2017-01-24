@@ -97,9 +97,6 @@ class GenusController extends Controller
     {
         $notes = [];
         foreach ($genus->getNotes() as $note){
-            /**
-             * @var $note GenusNote
-            **/
             $notes[] = [
                 'id' => $note->getId(),
                 'username' => $note->getUsername(),
