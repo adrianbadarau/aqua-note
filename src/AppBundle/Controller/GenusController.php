@@ -26,7 +26,6 @@ class GenusController extends Controller
             $mdParser = $this->get('markdown.parser');
             $funFact = $mdParser->transform($funFact);
             $cache->save($key,$funFact);
-            sleep(2);
         }
 
         return $this->render("@App/genus/show.html.twig", compact('name', 'funFact'));
