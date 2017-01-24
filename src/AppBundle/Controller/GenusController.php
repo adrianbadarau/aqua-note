@@ -17,12 +17,9 @@ class GenusController extends Controller
      */
     public function showAction(string $name)
     {
-        $notes = [
-            'Lorem ipsum dolor sit amet, ne tantas dolorem quaestio quo, in vix choro principes torquatos. Eu qui iuvaret mentitum conclusionemque, quem laudem sententiae sea et. Eligendi ponderum dissentias ut cum, eu timeam audire scribentur ius! Eu eum veniam salutatus constituam. Omnesque petentium complectitur id sit. Vim reque saepe te, no nec natum persius.',
-            'Lorem ipsum dolor sit amet, ne tantas dolorem quaestio quo, in vix choro principes torquatos. Eu qui iuvaret mentitum conclusionemque, quem laudem sententiae sea et. Eligendi ponderum dissentias ut cum, eu timeam audire scribentur ius! Eu eum veniam salutatus constituam. Omnesque petentium complectitur id sit. Vim reque saepe te, no nec natum persius.',
-            'Lorem ipsum dolor sit amet, ne tantas dolorem quaestio quo, in vix choro principes torquatos. Eu qui iuvaret mentitum conclusionemque, quem laudem sententiae sea et. Eligendi ponderum dissentias ut cum, eu timeam audire scribentur ius! Eu eum veniam salutatus constituam. Omnesque petentium complectitur id sit. Vim reque saepe te, no nec natum persius.'
-        ];
-        return $this->render("@App/genus/show.html.twig",compact('name', 'notes'));
+        $funFact = "Octopuses can change the color of their body in just *three-tenths* of a second!";
+        $this->container->get('');
+        return $this->render("@App/genus/show.html.twig",compact('name'));
     }
 
     /**
