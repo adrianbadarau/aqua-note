@@ -4,16 +4,8 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>New Genus</h1>
-                {{ form_start(genusForm) }}
-                    {{ form_row(genusForm.name) }}
-                    {{ form_row(genusForm.subFamily) }}
-                    {{ form_row(genusForm.funFact) }}
-                    {{ form_row(genusForm.speciesCount) }}
-                    {{ form_row(genusForm.isPublished) }}
-                    {{ form_row(genusForm.firstDiscoveredAt) }}
-                    <button type="submit" class="btn btn-success" formnovalidate>Save</button>
-                {{ form_end(genusForm) }}
+                <h1>{{type}} Genus</h1>
+                    {{ include('AppBundle:admin/genus:_form.html.twig') }}
             </div>
         </div>
     </div>
