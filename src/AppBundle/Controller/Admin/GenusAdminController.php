@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Form\GenusFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin")
@@ -26,9 +28,24 @@ class GenusAdminController extends Controller
 
     /**
      * @Route("/genus/new", name="admin_genus_new")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-        // let's go to work!
+        $form = $this->createForm(GenusFormType::class);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $genus = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($genus);
+            $em->flush();
+            $this->addFlash('success', 'Genus successfully created');
+            return $this->redirectToRoute('admin_genus_list');
+        }
+        return $this->render('AppBundle:admin/genus:new.html.twig', [
+            'genusForm' => $form->createView()
+        ]);
     }
 }
