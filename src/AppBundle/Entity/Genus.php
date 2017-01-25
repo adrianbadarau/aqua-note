@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Genus
@@ -25,6 +26,7 @@ class Genus
     /**
      * @var $name string
      * @ORM\Column(type="string",length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -36,6 +38,8 @@ class Genus
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Range(min="0",minMessage="Please insert only positives")
      */
     private $speciesCount;
 
@@ -60,6 +64,7 @@ class Genus
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotBlank()
      */
     private $firstDiscoveredAt;
 
