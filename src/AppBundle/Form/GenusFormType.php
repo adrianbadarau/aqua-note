@@ -3,6 +3,10 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Genus;
+use AppBundle\Entity\SubFamily;
+use AppBundle\Repository\SubFamilyRepository;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,15 +20,20 @@ class GenusFormType extends AbstractType
             ->add('speciesCount')
             ->add('funFact')
             ->add('isPublished')
-            ->add('subFamily')
-            ->add('firstDiscoveredAt')
-        ;
+            ->add('subFamily', EntityType::class, [
+                'placeholder' => 'Choose a subfamily',
+                'class' => SubFamily::class,
+                'query_builder' => function(SubFamilyRepository $repository){
+                    return $repository->getForSelectAllOrderedByName();
+                }
+            ])
+            ->add('firstDiscoveredAt');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'=>Genus::class
+            'data_class' => Genus::class
         ]);
     }
 
