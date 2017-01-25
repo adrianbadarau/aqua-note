@@ -19,7 +19,7 @@ class GenusAdminController extends Controller
             ->getRepository('AppBundle:Genus')
             ->findAll();
 
-        return $this->render('admin/genus/list.html.twig', array(
+        return $this->render('AppBundle:admin/genus:list.html.twig', array(
             'genuses' => $genuses
         ));
     }

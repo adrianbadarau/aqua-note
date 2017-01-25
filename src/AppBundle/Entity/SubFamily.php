@@ -27,7 +27,10 @@ class SubFamily
         return $this->id;
     }
 
-    public function getName()
+    /**
+     * @return string
+    **/
+    public function getName() : string
     {
         return $this->name;
     }
@@ -35,5 +38,10 @@ class SubFamily
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }
