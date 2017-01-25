@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 
 class SubFamilyRepository extends EntityRepository
 {
-    public function getForSelectAllOrderedByName(string $direction = 'ASC')
+    public function createAlphabeticalQueryBuilder(string $direction = 'ASC')
     {
         return $this->createQueryBuilder('subFamily')
             ->addOrderBy('subFamily.name', $direction);

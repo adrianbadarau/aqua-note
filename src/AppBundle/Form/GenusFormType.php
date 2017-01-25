@@ -24,7 +24,7 @@ class GenusFormType extends AbstractType
                 'placeholder' => 'Choose a subfamily',
                 'class' => SubFamily::class,
                 'query_builder' => function(SubFamilyRepository $repository){
-                    return $repository->getForSelectAllOrderedByName();
+                    return $repository->createAlphabeticalQueryBuilder();
                 }
             ])
             ->add('firstDiscoveredAt');
