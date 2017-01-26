@@ -207,4 +207,38 @@ class Genus
     }
 
 
+
+    /**
+     * Get isPublished
+     *
+     * @return boolean
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
+    }
+
+    /**
+     * Add note
+     *
+     * @param \AppBundle\Entity\GenusNote $note
+     *
+     * @return Genus
+     */
+    public function addNote(\AppBundle\Entity\GenusNote $note)
+    {
+        $this->notes[] = $note;
+
+        return $this;
+    }
+
+    /**
+     * Remove note
+     *
+     * @param \AppBundle\Entity\GenusNote $note
+     */
+    public function removeNote(\AppBundle\Entity\GenusNote $note)
+    {
+        $this->notes->removeElement($note);
+    }
 }
