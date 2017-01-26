@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,6 +36,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @var RouterInterface
      */
     private $router;
+    /**
+     * @var UserPasswordEncoder
+     */
+    private $passwordEncoder;
 
 
     /**
@@ -42,12 +47,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param FormFactoryInterface $formFactory
      * @param EntityManager $entityManager
      * @param RouterInterface $router
+     * @param UserPasswordEncoder $passwordEncoder
      */
-    public function __construct(FormFactoryInterface $formFactory, EntityManager $entityManager, RouterInterface $router)
+    public function __construct(FormFactoryInterface $formFactory, EntityManager $entityManager, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
     {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function getCredentials(Request $request)
@@ -80,9 +87,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $password = $credentials['_password'];
-
-        return $password === 'Gigel';
+        return $this->passwordEncoder->isPasswordValid($user, $credentials['_password']);
     }
 
     protected function getLoginUrl()

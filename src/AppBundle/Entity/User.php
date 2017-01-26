@@ -28,6 +28,14 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    private $plainPassword;
+
+    /**
      * Get id
      *
      * @return int
@@ -80,6 +88,7 @@ class User implements UserInterface
      */
     public function getPassword()
     {
+        return $this->password;
     }
 
     /**
@@ -101,6 +110,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
+        $this->plainPassword = null;
     }
 
     /**
@@ -125,5 +135,32 @@ class User implements UserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @param mixed $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+        $this->password = null;
     }
 }
