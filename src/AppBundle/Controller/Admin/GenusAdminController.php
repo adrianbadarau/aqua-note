@@ -45,7 +45,7 @@ class GenusAdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($genus);
             $em->flush();
-            $this->addFlash('success', 'Genus successfully created');
+            $this->addFlash('success', 'Genus successfully created by -'.$this->getUser()->getUserName());
             return $this->redirectToRoute('admin_genus_list');
         }
         return $this->render('AppBundle:admin/genus:new.html.twig', [
