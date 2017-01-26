@@ -3,13 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="The email has already been used")
  */
 class User implements UserInterface
 {
@@ -137,7 +140,8 @@ class User implements UserInterface
 
     /**
      * Get email
-     *
+     * @Assert\Email()
+     * @Assert\NotBlank()
      * @return string
      */
     public function getEmail()
@@ -156,6 +160,7 @@ class User implements UserInterface
     }
 
     /**
+     * @Assert\NotBlank(groups={"Registration"})
      * @return mixed
      */
     public function getPlainPassword()

@@ -3,6 +3,9 @@
 security:
     encoders:
         AppBundle\Entity\User: bcrypt
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_ALLOWED_TO_SWITCH]
+
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         app_users:
@@ -21,7 +24,7 @@ security:
                     - app.security.login_form_authenticator
             logout:
                 path: /logout
-
+            switch_user: ~
             # activate different ways to authenticate
 
             # http_basic: ~
