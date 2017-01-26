@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Form\LoginFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class SecurityController extends Controller
 {
@@ -28,5 +29,13 @@ class SecurityController extends Controller
             'error' => $error,
             'loginForm' => $form->createView()
         ));
+    }
+
+    /**
+     * @Route("/logout", name="security_logout")
+    **/
+    public function logoutAction()
+    {
+        throw new Exception('LogedOut');
     }
 }
