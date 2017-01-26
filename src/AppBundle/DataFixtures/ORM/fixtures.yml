@@ -25,3 +25,4 @@ AppBundle\Entity\User:
         # use some fake data for this
         email: <email()>
         plainPassword: Gigel
+        roles: ['ROLE_USER']
