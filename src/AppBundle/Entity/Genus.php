@@ -90,11 +90,17 @@ class Genus
     private $slug;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
+     */
+    private $genusScientists;
+
+    /**
      * Genus constructor.
      */
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->genusScientists = new ArrayCollection();
     }
 
 
