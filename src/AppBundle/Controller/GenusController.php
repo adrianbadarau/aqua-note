@@ -55,20 +55,13 @@ class GenusController extends Controller
     }
 
     /**
-     * @Route("/genus/{name}", name="genus_show")
-     * @param string $name
+     * @Route("/genus/{slug}", name="genus_show")
+     * @param Genus $genus
      * @return Response
+     * @internal param string $name
      */
-    public function showAction(string $name)
+    public function showAction(Genus $genus)
     {
-        $em = $this->getDoctrine()->getManager();
-        $genusRepository = $em->getRepository("AppBundle:Genus");
-
-        $genus = $genusRepository->findOneBy(['name' => $name]);
-
-        if(!$genus){
-            throw $this->createNotFoundException('Genus not found');
-        }
 
         $newNotes = $this->getDoctrine()->getRepository("AppBundle:GenusNote")->findAllRecentNotesForGenus($genus);
 
@@ -83,7 +76,7 @@ class GenusController extends Controller
     }
 
     /**
-     * @Route("/genus/{name}/notes", name="genus_show_notes")
+     * @Route("/genus/{slug}/notes", name="genus_show_notes")
      * @Method("GET")
      * @param Genus $genus
      * @return JsonResponse
