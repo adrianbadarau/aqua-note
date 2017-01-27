@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -41,7 +43,19 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @var Genus[]|ArrayCollection
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Genus", mappedBy="genusScientists")
+    **/
+    private $studiedGenuses;
+
     private $plainPassword;
+
+    public function __construct()
+    {
+        $this->studiedGenuses = new ArrayCollection();
+    }
+
 
     /**
      * Get id
@@ -189,5 +203,28 @@ class User implements UserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function getFullName() :string
+    {
+        return "Find me at :" . $this->getEmail();
+    }
+
+    /**
+     * @param ArrayCollection|Genus[] $studiedGenuses
+     * @return User
+     */
+    public function setStudiedGenuses($studiedGenuses) : User
+    {
+        $this->studiedGenuses = $studiedGenuses;
+        return $this;
+    }
+
+    /**
+     * @return Genus[]|ArrayCollection|Collection
+     */
+    public function getStudiedGenuses():Collection
+    {
+        return $this->studiedGenuses;
     }
 }

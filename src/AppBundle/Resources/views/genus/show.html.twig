@@ -17,6 +17,12 @@
                 <dd>{{ genus.funFact|md }}</dd>
                 <dt>Recent Notes Count:</dt>
                 <dd>{{ recentNotesCount }}</dd>
+                <dt>Lead scientists:</dt>
+                <dd>
+                    {% for scientist in genus.genusScientists %}
+                        <a href="{{ path('user_show', {'id': scientist.id}) }}"> {{ scientist.email }}</a> |
+                    {% endfor %}
+                </dd>
             </dl>
         </div>
     </div>

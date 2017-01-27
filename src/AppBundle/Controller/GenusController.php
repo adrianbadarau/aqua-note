@@ -22,8 +22,8 @@ class GenusController extends Controller
         $genus = new Genus();
         $genus->setName('Octopus'.rand(0,100));
         $genus->setSpeciesCount(rand(1,10000));
-        $genus->setSubFamiliy('Octopodinae');
         $genus->setIsPublished(true);
+        $genus->setFirstDiscoveredAt(new \DateTime());
 
         $note = new GenusNote();
         $note->setUsername('AquaWeaver');
@@ -33,6 +33,10 @@ class GenusController extends Controller
         $note->setGenus($genus);
 
         $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle:User')->find(11);
+        $genus->addGenusScientist($user);
+        $user = $em->getRepository('AppBundle:User')->find(12);
+        $genus->addGenusScientist($user);
         $em->persist($genus);
         $em->persist($note);
         $em->flush();

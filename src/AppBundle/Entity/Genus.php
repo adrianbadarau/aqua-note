@@ -90,7 +90,7 @@ class Genus
     private $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User",inversedBy="studiedGenuses")
      */
     private $genusScientists;
 
@@ -315,5 +315,30 @@ class Genus
     public function setUpdated(\DateTime $updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return User[]|ArrayCollection
+     */
+    public function getGenusScientists()
+    {
+        return $this->genusScientists;
+    }
+
+    /**
+     * @param User[] $genusScientists
+     * @return void
+     */
+    public function setGenusScientists(array $genusScientists) : void
+    {
+        $this->genusScientists = $genusScientists;
+    }
+
+    public function addGenusScientist(User $user) : void
+    {
+        if($this->genusScientists->contains($user)){
+            return;
+        }
+        $this->genusScientists->add($user);
     }
 }
