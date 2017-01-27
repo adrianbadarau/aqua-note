@@ -80,3 +80,13 @@ doctrine_cache:
     providers:
         my_markdown_cache:
             type: "%cache_type%"
+
+stof_doctrine_extensions:
+    default_locale: en_US
+    orm:
+        default:
+            sluggable: true
+            timestampable: true # not needed: listeners are not enabled by default
+#            tree: true
+#        other:
+#            timestampable: true
