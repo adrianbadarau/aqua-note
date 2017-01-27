@@ -90,7 +90,8 @@ class Genus
     private $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User",inversedBy="studiedGenuses")
+     * @var User[]|ArrayCollection
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="studiedGenuses" )
      */
     private $genusScientists;
 
