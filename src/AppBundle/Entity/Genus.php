@@ -342,4 +342,9 @@ class Genus
         }
         $this->genusScientists->add($user);
     }
+
+    public function removeGenusScientist(User $user) : void
+    {
+        $this->getGenusScientists()->removeElement($user);
+    }
 }

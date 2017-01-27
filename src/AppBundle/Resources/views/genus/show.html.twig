@@ -19,9 +19,16 @@
                 <dd>{{ recentNotesCount }}</dd>
                 <dt>Lead scientists:</dt>
                 <dd>
-                    {% for scientist in genus.genusScientists %}
-                        <a href="{{ path('user_show', {'id': scientist.id}) }}"> {{ scientist.email }}</a> |
-                    {% endfor %}
+                    <ul class="list-group">
+                        {% for scientist in genus.genusScientists %}
+                            <li class="list-group-item">
+                                <a href="{{ path('user_show', {'id': scientist.id}) }}"> {{ scientist.email }}</a>
+                                <a href="#" class="btn btn-link btn-xs pull-right js-remove-scientist-user"><span class="fa fa-close"></span></a>
+                            </li>
+
+                        {% endfor %}
+                    </ul>
+
                 </dd>
             </dl>
         </div>
@@ -40,8 +47,16 @@
         let notesUrl = '{{ path('genus_show_notes', {'slug': genus.slug}) }}';
 
         ReactDOM.render(
-                <NoteSection url={notesUrl} />,
+                <NoteSection url={notesUrl}/>,
             document.getElementById('js-notes-wrapper')
         );
+    </script>
+    <script>
+        jQuery(document).ready(function () {
+            $('.js-remove-scientist-user').on('click', function (e) {
+                e.preventDefault();
+
+            })
+        })
     </script>
 {% endblock %}

@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\GenusNote;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -102,6 +104,24 @@ class GenusController extends Controller
         ];
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/genus/{genus_id}/scientist/{user_id}", name="genus_scientist_remove")
+     * @ParamConverter("genus", options={"mapping":{"genus_id":"id"}},class="AppBundle:Genus")
+     * @ParamConverter("user", options={"mapping":{"user_id":"id"}}, class="AppBundle:User")
+     * @Method("DELETE")
+     * @param Genus $genus
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function removeScientistAction(Genus $genus,User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $genus->removeGenusScientist($user);
+        $em->persist($user);
+        $em->flush();
+        return $this->json('Success');
     }
 
 
