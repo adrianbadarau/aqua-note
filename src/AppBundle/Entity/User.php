@@ -46,8 +46,7 @@ class User implements UserInterface
 
     /**
      * @var Genus[]|ArrayCollection
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Genus", mappedBy="genusScientists")
-     * @ORM\OrderBy({"name"="ASC"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusScientist", mappedBy="user")
      **/
     private $studiedGenuses;
 
