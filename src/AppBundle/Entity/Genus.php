@@ -91,7 +91,12 @@ class Genus
 
     /**
      * @var User[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusScientist", mappedBy="genus", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\GenusScientist",
+     *     mappedBy="genus",
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=true
+     * )
      */
     private $genusScientists;
 
@@ -336,13 +341,13 @@ class Genus
         return $this;
     }
 
-    public function removeGenusScientist(User $user) : Genus
+    public function removeGenusScientist(GenusScientist $genusScientist) : Genus
     {
-        if(! $this->getGenusScientists()->contains($user)){
+        if(! $this->getGenusScientists()->contains($genusScientist)){
             return $this;
         }
-        $this->getGenusScientists()->removeElement($user);
-        $user->removeStudiedGenus($this);
+        $this->getGenusScientists()->removeElement($genusScientist);
+        $genusScientist->setGenus(null);
         return $this;
     }
 }

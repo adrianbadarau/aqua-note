@@ -24,6 +24,13 @@
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd'
             });
+            let wrapper = $('.js-genus-scientist-wrapper');
+            wrapper.on('click','.js-remove-scientist', function (e) {
+                e.preventDefault();
+
+                $(this).closest('.js-scientist-item').remove();
+            })
         });
     </script>
+
 {% endblock %}
