@@ -270,6 +270,9 @@ class User implements UserInterface
      */
     public function removeStudiedGenus(Genus $genus): User
     {
+        if(!$this->getStudiedGenuses()->contains($genus)){
+            return $this;
+        }
         $this->getStudiedGenuses()->removeElement($genus);
         $genus->removeGenusScientist($this);
         return $this;

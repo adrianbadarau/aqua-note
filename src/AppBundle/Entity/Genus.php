@@ -350,6 +350,9 @@ class Genus
 
     public function removeGenusScientist(User $user) : void
     {
+        if(! $this->getGenusScientists()->contains($user)){
+            return;
+        }
         $this->getGenusScientists()->removeElement($user);
         $user->addStudiedGenus($this);
     }
