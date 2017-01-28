@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\GenusNote;
+use AppBundle\Entity\GenusScientist;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -21,6 +22,8 @@ class GenusController extends Controller
      **/
     public function newAction()
     {
+        $em = $this->getDoctrine()->getManager();
+
         $genus = new Genus();
         $genus->setName('Octopus' . rand(0, 100));
         $genus->setSpeciesCount(rand(1, 10000));
@@ -34,13 +37,15 @@ class GenusController extends Controller
         $note->setCreatedAt(new \DateTime('-1 month'));
         $note->setGenus($genus);
 
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:User')->find(11);
-        $genus->addGenusScientist($user);
-        $user = $em->getRepository('AppBundle:User')->find(12);
-        $genus->addGenusScientist($user);
+        $user1 = $em->getRepository("AppBundle:User")->findOneBy(['email' => 'aquanaut1@example.org']);
+        $user2 = $em->getRepository("AppBundle:User")->findOneBy(['email' => 'aquanaut2@example.org']);
+
+        $genusScientist = new GenusScientist();
+        $genusScientist->setGenus($genus)->setUser($user1)->setYearsStudied(10);
+
         $em->persist($genus);
         $em->persist($note);
+        $em->persist($genusScientist);
         $em->flush();
 
         return new Response("Genus created");
@@ -108,18 +113,15 @@ class GenusController extends Controller
 
     /**
      * @Route("/genus/{genus_id}/scientist/{user_id}", name="genus_scientist_remove")
-     * @ParamConverter("genus", options={"mapping":{"genus_id":"id"}},class="AppBundle:Genus")
-     * @ParamConverter("user", options={"mapping":{"user_id":"id"}}, class="AppBundle:User")
+     * @ParamConverter("genusScientist", options={"mapping":{"genus_id":"genus","user_id":"user"}},class="AppBundle:GenusScientist")
      * @Method("DELETE")
-     * @param Genus $genus
-     * @param User $user
+     * @param GenusScientist $genusScientist
      * @return JsonResponse
      */
-    public function removeScientistAction(Genus $genus, User $user)
+    public function removeScientistAction(GenusScientist $genusScientist)
     {
         $em = $this->getDoctrine()->getManager();
-        $genus->removeGenusScientist($user);
-        $em->persist($user);
+        $em->remove($genusScientist);
         $em->flush();
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }

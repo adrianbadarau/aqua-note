@@ -22,8 +22,8 @@
                     <ul class="list-group">
                         {% for scientist in genus.genusScientists %}
                             <li class="list-group-item js-scientist-item">
-                                <a href="{{ path('user_show', {'id': scientist.id}) }}"> {{ scientist.fullName }}</a>
-                                <a href="#" class="btn btn-link btn-xs pull-right js-remove-scientist-user" data-url="{{ path('genus_scientist_remove', {"genus_id" : genus.id, "user_id" : scientist.id }) }}"><span class="fa fa-close"></span></a>
+                                <a href="{{ path('user_show', {'id': scientist.user.id}) }}"> {{ scientist.user.fullName }} | {{ scientist.yearsStudied }}</a>
+                                <a href="#" class="btn btn-link btn-xs pull-right js-remove-scientist-user" data-url="{{ path('genus_scientist_remove', {"genus_id" : genus.id, "user_id" : scientist.user.id }) }}"><span class="fa fa-close"></span></a>
                             </li>
 
                         {% endfor %}

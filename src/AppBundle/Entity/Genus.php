@@ -319,37 +319,30 @@ class Genus
     }
 
     /**
-     * @return User[]|ArrayCollection
+     * @return GenusScientist[]|ArrayCollection
      */
     public function getGenusScientists()
     {
         return $this->genusScientists;
     }
 
-    /**
-     * @param User[] $genusScientists
-     * @return void
-     */
-    public function setGenusScientists(array $genusScientists) : void
-    {
-        $this->genusScientists = $genusScientists;
-    }
-
-    public function addGenusScientist(User $user) : void
+    public function addGenusScientist(User $user) : Genus
     {
         if($this->genusScientists->contains($user)){
-            return;
+            return $this;
         }
         $this->genusScientists->add($user);
         $user->addStudiedGenus($this);
+        return $this;
     }
 
-    public function removeGenusScientist(User $user) : void
+    public function removeGenusScientist(User $user) : Genus
     {
         if(! $this->getGenusScientists()->contains($user)){
-            return;
+            return $this;
         }
         $this->getGenusScientists()->removeElement($user);
         $user->removeStudiedGenus($this);
+        return $this;
     }
 }

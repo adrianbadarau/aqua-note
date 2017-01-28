@@ -278,7 +278,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Genus[]|ArrayCollection|Collection
+     * @return GenusScientist[]|ArrayCollection|Collection
      */
     public function getStudiedGenuses(): Collection
     {

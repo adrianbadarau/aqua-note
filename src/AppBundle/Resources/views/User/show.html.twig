@@ -30,7 +30,7 @@
                     </tr>
                     <tr>
                         <th>University</th>
-                        <td>{{ user.universityName|default('-') }}</td>
+                        <td>{{ user.university|default('-') }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -38,8 +38,8 @@
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
             	<h3>Genuses studied:</h3>
                 <ul>
-                    {% for genus in user.studiedGenuses %}
-                        <li><a href="{{ path('genus_show', {'slug': genus.slug}) }}"> {{ genus.name }}</a></li>
+                    {% for genusScientist in user.studiedGenuses %}
+                        <li><a href="{{ path('genus_show', {'slug': genusScientist.genus.slug}) }}"> {{ genusScientist.genus.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
