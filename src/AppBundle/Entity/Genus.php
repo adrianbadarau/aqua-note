@@ -354,6 +354,6 @@ class Genus
             return;
         }
         $this->getGenusScientists()->removeElement($user);
-        $user->addStudiedGenus($this);
+        $user->removeStudiedGenus($this);
     }
 }
