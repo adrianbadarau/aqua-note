@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Form\UserEditFormType;
 use AppBundle\Form\UserRegistrationForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -60,7 +61,7 @@ class UserController extends Controller
      */
     public function editAction(User $user, Request $request)
     {
-        $form = $this->createForm(UserEditForm::class, $user);
+        $form = $this->createForm(UserEditFormType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {

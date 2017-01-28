@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
     <div class="container">
@@ -9,11 +9,7 @@
                 {{ form_start(userForm) }}
                     {{ form_errors(userForm) }}
 
-                    {{ form_row(userForm.email) }}
-                    {{ form_row(userForm.isScientist) }}
-                    {{ form_row(userForm.firstName) }}
-                    {{ form_row(userForm.lastName) }}
-                    {{ form_row(userForm.universityName) }}
+                    {{ form_widget(userForm) }}
 
                     <button type="submit" class="btn btn-primary">Update</button>
                 {{ form_end(userForm) }}

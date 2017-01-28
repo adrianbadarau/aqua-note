@@ -251,12 +251,27 @@ class User implements UserInterface
     }
 
     /**
-     * @param ArrayCollection|Genus[] $studiedGenuses
+     * @param Genus $genus
      * @return User
      */
-    public function setStudiedGenuses($studiedGenuses): User
+    public function addStudiedGenus(Genus $genus): User
     {
-        $this->studiedGenuses = $studiedGenuses;
+        if ($this->getStudiedGenuses()->contains($genus)) {
+            return $this;
+        }
+        $this->getStudiedGenuses()->add($genus);
+        $genus->addGenusScientist($this);
+        return $this;
+    }
+
+    /**
+     * @param Genus $genus
+     * @return User
+     */
+    public function removeStudiedGenus(Genus $genus): User
+    {
+        $this->getStudiedGenuses()->removeElement($genus);
+        $genus->removeGenusScientist($this);
         return $this;
     }
 
