@@ -22,8 +22,8 @@ class GenusController extends Controller
     public function newAction()
     {
         $genus = new Genus();
-        $genus->setName('Octopus'.rand(0,100));
-        $genus->setSpeciesCount(rand(1,10000));
+        $genus->setName('Octopus' . rand(0, 100));
+        $genus->setSpeciesCount(rand(1, 10000));
         $genus->setIsPublished(true);
         $genus->setFirstDiscoveredAt(new \DateTime());
 
@@ -48,14 +48,14 @@ class GenusController extends Controller
 
     /**
      * @Route("/genus", name="genus_list")
-    **/
+     **/
     public function listAction()
     {
         $em = $this->getDoctrine()->getManager();
         $genusRepository = $em->getRepository("AppBundle:Genus");
         $genuses = $genusRepository->findAllOrderedByRecentNote();
 
-        return $this->render("AppBundle:genus:list.html.twig",[
+        return $this->render("AppBundle:genus:list.html.twig", [
             'genuses' => $genuses,
         ]);
     }
@@ -90,11 +90,11 @@ class GenusController extends Controller
     public function getNotesAction(Genus $genus)
     {
         $notes = [];
-        foreach ($genus->getNotes() as $note){
+        foreach ($genus->getNotes() as $note) {
             $notes[] = [
                 'id' => $note->getId(),
                 'username' => $note->getUsername(),
-                'avatarUri' => '/images/'.$note->getUserAvatarFilename(),
+                'avatarUri' => '/images/' . $note->getUserAvatarFilename(),
                 'note' => $note->getNote(),
                 'date' => $note->getCreatedAt()->format('M d, Y')
             ];
@@ -115,15 +115,14 @@ class GenusController extends Controller
      * @param User $user
      * @return JsonResponse
      */
-    public function removeScientistAction(Genus $genus,User $user)
+    public function removeScientistAction(Genus $genus, User $user)
     {
         $em = $this->getDoctrine()->getManager();
         $genus->removeGenusScientist($user);
         $em->persist($user);
         $em->flush();
-        return $this->json('Success');
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
-
 
 
 }
