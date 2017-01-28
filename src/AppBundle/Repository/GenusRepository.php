@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 use AppBundle\Entity\Genus;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -25,6 +26,9 @@ class GenusRepository extends EntityRepository
         return $query->getQuery()->execute();
     }
 
+    /**
+     * @return Genus[]|array
+    **/
     public function findAllOrderedByRecentNote() : array
     {
         return $this->createQueryBuilder('genus')
@@ -32,6 +36,8 @@ class GenusRepository extends EntityRepository
             ->setParameter('published', true)
             ->join('genus.notes','genusNote')
             ->orderBy('genusNote.createdAt','DESC')
+            ->join('genus.genusScientists', 'genus_scientists')
+            ->addSelect('genus_scientists')
             ->getQuery()->execute();
     }
 }
