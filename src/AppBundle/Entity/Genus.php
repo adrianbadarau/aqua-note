@@ -345,10 +345,12 @@ class Genus
             return;
         }
         $this->genusScientists->add($user);
+        $user->addStudiedGenus($this);
     }
 
     public function removeGenusScientist(User $user) : void
     {
         $this->getGenusScientists()->removeElement($user);
+        $user->addStudiedGenus($this);
     }
 }
