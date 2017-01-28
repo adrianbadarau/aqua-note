@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Genus;
 use AppBundle\Entity\SubFamily;
+use AppBundle\Entity\User;
 use AppBundle\Repository\SubFamilyRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -34,7 +35,13 @@ class GenusFormType extends AbstractType
                     'class' => 'js-datepicker'
                 ],
                 'html5' => false,
-            ]);
+            ])
+            ->add('genusScientists', EntityType::class, [
+                'class' => User::class,
+                'multiple' => true,
+                'expanded' => true,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

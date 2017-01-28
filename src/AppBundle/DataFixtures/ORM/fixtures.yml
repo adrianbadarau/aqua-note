@@ -6,7 +6,7 @@ AppBundle\Entity\Genus:
         funFact: <sentence()>
         isPublished: <boolean(75)>
         firstDiscoveredAt: <dateTimeBetween('-200 years', 'now')>
-        genusScientists: '3x @user_*'
+        genusScientists: '3x @user.aquanaut_*'
 
 AppBundle\Entity\GenusNote:
     genus.note_{1..100}:
@@ -23,7 +23,16 @@ AppBundle\Entity\SubFamily:
 
 AppBundle\Entity\User:
     user_{1..10}:
-        # use some fake data for this
+        firstName: <firstName()>
+        lastName: <lastName()>
         email: <email()>
         plainPassword: Gigel
         roles: ['ROLE_USER']
+    user.aquanaut_{1..10}:
+        email: aquanaut<current()>@example.org
+        plainPassword: aquanote
+        isScientist: true
+        firstName: <firstName()>
+        lastName: <lastName()>
+        university: <company()> University
+        roles: ['ROLE_ADMIN']

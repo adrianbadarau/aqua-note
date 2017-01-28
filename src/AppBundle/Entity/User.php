@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,10 +48,48 @@ class User implements UserInterface
      * @var Genus[]|ArrayCollection
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Genus", mappedBy="genusScientists")
      * @ORM\OrderBy({"name"="ASC"})
-    **/
+     **/
     private $studiedGenuses;
 
     private $plainPassword;
+
+    /**
+     * @var $firstName string
+     * @ORM\Column(type="string")
+     */
+    private $firstName;
+
+    /**
+     * @var $lastName string
+     * @ORM\Column(type="string")
+     */
+    private $lastName;
+
+    /**
+     * @var $university string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $university;
+
+    /**
+     * @var $isScientist boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isScientist;
+
+    /**
+     * @var $created \DateTime
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $created;
+
+    /**
+     * @var $updated \DateTime
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updated;
 
     public function __construct()
     {
@@ -97,7 +136,7 @@ class User implements UserInterface
     public function getRoles()
     {
         $roles = $this->roles;
-        if (!in_array('ROLE_USER',$roles)){
+        if (!in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
 
@@ -206,16 +245,16 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getFullName() :string
+    public function getFullName(): string
     {
-        return "Find me at :" . $this->getEmail();
+        return $this->getFirstName() . " " . $this->getLastName();
     }
 
     /**
      * @param ArrayCollection|Genus[] $studiedGenuses
      * @return User
      */
-    public function setStudiedGenuses($studiedGenuses) : User
+    public function setStudiedGenuses($studiedGenuses): User
     {
         $this->studiedGenuses = $studiedGenuses;
         return $this;
@@ -224,8 +263,126 @@ class User implements UserInterface
     /**
      * @return Genus[]|ArrayCollection|Collection
      */
-    public function getStudiedGenuses():Collection
+    public function getStudiedGenuses(): Collection
     {
         return $this->studiedGenuses;
     }
+
+    /**
+     * @return string
+     */
+    function __toString(): string
+    {
+        return $this->getFullName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     * @return User
+     */
+    public function setFirstName(string $firstName): User
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return User
+     */
+    public function setLastName(string $lastName): User
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniversity(): string
+    {
+        return $this->university;
+    }
+
+    /**
+     * @param mixed $university
+     * @return User
+     */
+    public function setUniversity(string $university = null): User
+    {
+        $this->university = $university;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsScientist(): bool
+    {
+        return $this->isScientist;
+    }
+
+    /**
+     * @param bool $isScientist
+     * @return User
+     */
+    public function setIsScientist(bool $isScientist): User
+    {
+        $this->isScientist = $isScientist;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     * @return User
+     */
+    public function setCreated(\DateTime $created): User
+    {
+        $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated(): \DateTime
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     * @return User
+     */
+    public function setUpdated(\DateTime $updated): User
+    {
+        $this->updated = $updated;
+        return $this;
+    }
+
+
 }
