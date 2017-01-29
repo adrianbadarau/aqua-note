@@ -2,45 +2,50 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Repository\GenusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 /**
- * Genus
- *
- * @ORM\Table(name="genus")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenusRepository")
+ * @ORM\Table(name="genus")
  */
 class Genus
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var $name string
-     * @ORM\Column(type="string",length=255)
      * @Assert\NotBlank()
+     * @ORM\Column(type="string")
      */
     private $name;
 
     /**
+     * @ORM\Column(type="string", unique=true)
+     * @Gedmo\Slug(fields={"name"})
+     */
+    private $slug;
+
+    /**
+     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\SubFamily")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $subFamily;
 
     /**
-     * @ORM\Column(type="integer")
      * @Assert\NotBlank()
-     * @Assert\Range(min="0",minMessage="Please insert only positives")
+     * @Assert\Range(min=0, minMessage="Negative species! Come on...")
+     * @ORM\Column(type="integer")
      */
     private $speciesCount;
 
@@ -50,98 +55,53 @@ class Genus
     private $funFact;
 
     /**
-     * @var $isPublished boolean
-     *
-     * @ORM\Column(type="boolean", options={"default":false})
+     * @ORM\Column(type="boolean")
      */
-    private $isPublished = false;
+    private $isPublished = true;
 
     /**
-     * @var $notes GenusNote[]
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusNote", mappedBy="genus")
-     * @ORM\OrderBy({"createdAt"="DESC"})
-     */
-    private $notes;
-
-    /**
-     * @ORM\Column(type="date")
      * @Assert\NotBlank()
+     * @ORM\Column(type="date")
      */
     private $firstDiscoveredAt;
 
     /**
-     * @var $created \DateTime
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
+     * @ORM\OneToMany(targetEntity="GenusNote", mappedBy="genus")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
-    private $created;
+    private $notes;
 
     /**
-     * @var $updated \DateTime
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $updated;
-
-    /**
-     * @ORM\Column(type="string", unique=true)
-     * @Gedmo\Slug(fields={"name"})
-     */
-    private $slug;
-
-    /**
-     * @var User[]|ArrayCollection
      * @ORM\OneToMany(
-     *     targetEntity="AppBundle\Entity\GenusScientist",
+     *     targetEntity="GenusScientist",
      *     mappedBy="genus",
      *     fetch="EXTRA_LAZY",
-     *     orphanRemoval=true
+     *     orphanRemoval=true,
+     *     cascade={"persist"}
      * )
+     * @Assert\Valid()
      */
     private $genusScientists;
 
-    /**
-     * Genus constructor.
-     */
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->genusScientists = new ArrayCollection();
     }
 
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Genus
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**
@@ -152,43 +112,26 @@ class Genus
         return $this->subFamily;
     }
 
-    /**
-     * @param SubFamily $subFamily
-     * @return $this
-     */
     public function setSubFamily(SubFamily $subFamily = null)
     {
         $this->subFamily = $subFamily;
-        return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSpeciesCount()
     {
         return $this->speciesCount;
     }
 
-    /**
-     * @param mixed $speciesCount
-     */
     public function setSpeciesCount($speciesCount)
     {
         $this->speciesCount = $speciesCount;
     }
 
-    /**
-     * @return mixed
-     */
     public function getFunFact()
     {
         return $this->funFact;
     }
 
-    /**
-     * @param mixed $funFact
-     */
     public function setFunFact($funFact)
     {
         $this->funFact = $funFact;
@@ -196,23 +139,17 @@ class Genus
 
     public function getUpdatedAt()
     {
-        return new \DateTime("-".rand(0,10)." days");
+        return new \DateTime('-'.rand(0, 100).' days');
     }
 
-    /**
-     * @return bool
-     */
-    public function isIsPublished(): bool
-    {
-        return $this->isPublished;
-    }
-
-    /**
-     * @param bool $isPublished
-     */
-    public function setIsPublished(bool $isPublished)
+    public function setIsPublished($isPublished)
     {
         $this->isPublished = $isPublished;
+    }
+
+    public function getIsPublished()
+    {
+        return $this->isPublished;
     }
 
     /**
@@ -223,131 +160,63 @@ class Genus
         return $this->notes;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getFirstDiscoveredAt()
     {
         return $this->firstDiscoveredAt;
     }
 
-    /**
-     * @param \DateTime $firstDiscoveredAt
-     */
     public function setFirstDiscoveredAt(\DateTime $firstDiscoveredAt = null)
     {
         $this->firstDiscoveredAt = $firstDiscoveredAt;
     }
 
-
-
-    /**
-     * Get isPublished
-     *
-     * @return boolean
-     */
-    public function getIsPublished()
-    {
-        return $this->isPublished;
-    }
-
-    /**
-     * Add note
-     *
-     * @param \AppBundle\Entity\GenusNote $note
-     *
-     * @return Genus
-     */
-    public function addNote(\AppBundle\Entity\GenusNote $note)
-    {
-        $this->notes[] = $note;
-
-        return $this;
-    }
-
-    /**
-     * Remove note
-     *
-     * @param \AppBundle\Entity\GenusNote $note
-     */
-    public function removeNote(\AppBundle\Entity\GenusNote $note)
-    {
-        $this->notes->removeElement($note);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug() :string
+    public function getSlug()
     {
         return $this->slug;
     }
 
-    /**
-     * @param mixed $slug
-     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreated() : \DateTime
+    public function addGenusScientist(GenusScientist $genusScientist)
     {
-        return $this->created;
+        if ($this->genusScientists->contains($genusScientist)) {
+            return;
+        }
+
+        $this->genusScientists[] = $genusScientist;
+        // needed to update the owning side of the relationship!
+        $genusScientist->setGenus($this);
+    }
+
+    public function removeGenusScientist(GenusScientist $genusScientist)
+    {
+        if (!$this->genusScientists->contains($genusScientist)) {
+            return;
+        }
+
+        $this->genusScientists->removeElement($genusScientist);
+        // needed to update the owning side of the relationship!
+        $genusScientist->setGenus(null);
     }
 
     /**
-     * @param mixed $created
-     */
-    public function setCreated(\DateTime $created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdated() : \DateTime
-    {
-        return $this->updated;
-    }
-
-    /**
-     * @param mixed $updated
-     */
-    public function setUpdated(\DateTime $updated)
-    {
-        $this->updated = $updated;
-    }
-
-    /**
-     * @return GenusScientist[]|ArrayCollection
+     * @return ArrayCollection|GenusScientist[]
      */
     public function getGenusScientists()
     {
         return $this->genusScientists;
     }
 
-    public function addGenusScientist(User $user) : Genus
+    /**
+     * @return \Doctrine\Common\Collections\Collection|GenusScientist[]
+     */
+    public function getExpertScientists()
     {
-        if($this->genusScientists->contains($user)){
-            return $this;
-        }
-        $this->genusScientists->add($user);
-        $user->addStudiedGenus($this);
-        return $this;
-    }
-
-    public function removeGenusScientist(GenusScientist $genusScientist) : Genus
-    {
-        if(! $this->getGenusScientists()->contains($genusScientist)){
-            return $this;
-        }
-        $this->getGenusScientists()->removeElement($genusScientist);
-        $genusScientist->setGenus(null);
-        return $this;
+        return $this->getGenusScientists()->matching(
+            GenusRepository::createExpertCriteria()
+        );
     }
 }

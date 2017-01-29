@@ -1,70 +1,42 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: adiba
- * Date: 26-Jan-17
- * Time: 08:16
- */
 
 namespace AppBundle\Security;
 
-
-use AppBundle\Form\LoginFormType;
+use AppBundle\Form\LoginForm;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
-    /**
-     * @var FormFactoryInterface
-     */
     private $formFactory;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var RouterInterface
-     */
+    private $em;
     private $router;
-    /**
-     * @var UserPasswordEncoder
-     */
     private $passwordEncoder;
 
-
-    /**
-     * LoginFormAuthenticator constructor.
-     * @param FormFactoryInterface $formFactory
-     * @param EntityManager $entityManager
-     * @param RouterInterface $router
-     * @param UserPasswordEncoder $passwordEncoder
-     */
-    public function __construct(FormFactoryInterface $formFactory, EntityManager $entityManager, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
+    public function __construct(FormFactoryInterface $formFactory, EntityManager $em, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
     {
         $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
+        $this->em = $em;
         $this->router = $router;
         $this->passwordEncoder = $passwordEncoder;
     }
 
     public function getCredentials(Request $request)
     {
-        $isLoginSubmit = $request->getPathInfo() == '/login' && $request->isMethod(Request::METHOD_POST);
-        if(!$isLoginSubmit){
-            return null;
+        $isLoginSubmit = $request->getPathInfo() == '/login' && $request->isMethod('POST');
+        if (!$isLoginSubmit) {
+            // skip authentication
+            return;
         }
 
-        $form = $this->formFactory->create(LoginFormType::class);
+        $form = $this->formFactory->create(LoginForm::class);
         $form->handleRequest($request);
 
         $data = $form->getData();
@@ -78,16 +50,21 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $userName = $credentials['_username'];
+        $username = $credentials['_username'];
 
-        $user = $this->entityManager->getRepository('AppBundle:User')->findOneBy(['email' => $userName]);
-
-        return $user;
+        return $this->em->getRepository('AppBundle:User')
+            ->findOneBy(['email' => $username]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['_password']);
+        $password = $credentials['_password'];
+
+        if ($this->passwordEncoder->isPasswordValid($user, $password)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function getLoginUrl()
@@ -99,6 +76,4 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         return $this->router->generate('homepage');
     }
-
-
 }

@@ -1,26 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: adiba
- * Date: 28-Jan-17
- * Time: 12:22
- */
 
 namespace AppBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class GenusScientist
- * @package AppBundle\Entity
  * @ORM\Entity
  * @ORM\Table(name="genus_scientist")
+ * @UniqueEntity(
+ *     fields={"genus", "user"},
+ *     message="This user is already studying this genus",
+ *     errorPath="user"
+ * )
  */
 class GenusScientist
 {
     /**
-     * @var $id integer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
@@ -28,87 +25,55 @@ class GenusScientist
     private $id;
 
     /**
-     * @var $genus Genus
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Genus", inversedBy="genusScientists")
+     * @ORM\ManyToOne(targetEntity="Genus", inversedBy="genusScientists")
      * @ORM\JoinColumn(nullable=false)
      */
     private $genus;
 
     /**
-     * @var $user User
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="studiedGenuses")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="studiedGenuses")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @var $yearsStudied integer
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
      */
     private $yearsStudied;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return Genus
-     */
-    public function getGenus(): Genus
+    public function getGenus()
     {
         return $this->genus;
     }
 
-    /**
-     * @param Genus $genus
-     * @return GenusScientist
-     */
-    public function setGenus(Genus $genus): GenusScientist
+    public function setGenus($genus)
     {
         $this->genus = $genus;
-        return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     * @return GenusScientist
-     */
-    public function setUser(User $user): GenusScientist
+    public function setUser($user)
     {
         $this->user = $user;
-        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getYearsStudied(): int
+    public function getYearsStudied()
     {
         return $this->yearsStudied;
     }
 
-    /**
-     * @param int $yearsStudied
-     * @return GenusScientist
-     */
-    public function setYearsStudied(int $yearsStudied): GenusScientist
+    public function setYearsStudied($yearsStudied)
     {
         $this->yearsStudied = $yearsStudied;
-        return $this;
     }
-
-
-
 }

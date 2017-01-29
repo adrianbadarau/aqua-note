@@ -16,22 +16,16 @@ class UserRegistrationForm extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('plainPassword',RepeatedType::class,[
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'validation_groups' => ['Default','Registration']
+            'validation_groups' => ['Default', 'Registration']
         ]);
-    }
-
-    public function getName()
-    {
-        return 'app_bundle_user_registration_form';
     }
 }

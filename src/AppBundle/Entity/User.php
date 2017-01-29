@@ -3,41 +3,47 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * User
- *
- * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
- * @UniqueEntity(fields={"email"}, message="The email has already been used")
+ * @ORM\Table(name="user")
+ * @UniqueEntity(fields={"email"}, message="It looks like you already have an account!")
  */
 class User implements UserInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
      * @ORM\Column(type="string", unique=true)
      */
     private $email;
 
     /**
-     * @var string
+     * The encoded password
+     *
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * A non-persisted field that's used to create the encoded password.
+     * @Assert\NotBlank(groups={"Registration"})
+     *
+     * @var string
+     */
+    private $plainPassword;
 
     /**
      * @ORM\Column(type="json_array")
@@ -45,50 +51,34 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @var Genus[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GenusScientist", mappedBy="user")
-     **/
-    private $studiedGenuses;
-
-    private $plainPassword;
+     * @ORM\Column(type="boolean")
+     */
+    private $isScientist = false;
 
     /**
-     * @var $firstName string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $firstName;
 
     /**
-     * @var $lastName string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $lastName;
 
     /**
-     * @var $university string
      * @ORM\Column(type="string", nullable=true)
      */
-    private $university;
+    private $avatarUri;
 
     /**
-     * @var $isScientist boolean
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $isScientist;
+    private $universityName;
 
     /**
-     * @var $created \DateTime
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
+     * @ORM\OneToMany(targetEntity="GenusScientist", mappedBy="user")
      */
-    private $created;
-
-    /**
-     * @var $updated \DateTime
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $updated;
+    private $studiedGenuses;
 
     public function __construct()
     {
@@ -96,45 +86,22 @@ class User implements UserInterface
     }
 
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
-     */
+    // needed by the security system
     public function getUsername()
     {
-        return $this->getEmail();
+        return $this->email;
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
     public function getRoles()
     {
         $roles = $this->roles;
+
+        // give everyone ROLE_USER!
         if (!in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
@@ -142,264 +109,114 @@ class User implements UserInterface
         return $roles;
     }
 
-    /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
-     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+    }
+
     public function getPassword()
     {
         return $this->password;
     }
 
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
     public function getSalt()
     {
+        // leaving blank - I don't need/have a password!
     }
 
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     * @Assert\Email()
-     * @Assert\NotBlank()
-     * @return string
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * @param mixed $password
-     * @return User
-     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
     public function setPassword($password)
     {
         $this->password = $password;
-        return $this;
     }
 
-    /**
-     * @Assert\NotBlank(groups={"Registration"})
-     * @return mixed
-     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @param mixed $plainPassword
-     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
+        // forces the object to look "dirty" to Doctrine. Avoids
+        // Doctrine *not* saving this entity, if only plainPassword changes
         $this->password = null;
     }
 
-    /**
-     * Set roles
-     *
-     * @param array $roles
-     *
-     * @return User
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    public function getFullName(): string
-    {
-        return $this->getFirstName() . " " . $this->getLastName();
-    }
-
-    /**
-     * @param Genus $genus
-     * @return User
-     */
-    public function addStudiedGenus(Genus $genus): User
-    {
-        if ($this->getStudiedGenuses()->contains($genus)) {
-            return $this;
-        }
-        $this->getStudiedGenuses()->add($genus);
-        $genus->addGenusScientist($this);
-        return $this;
-    }
-
-    /**
-     * @param Genus $genus
-     * @return User
-     */
-    public function removeStudiedGenus(Genus $genus): User
-    {
-        if(!$this->getStudiedGenuses()->contains($genus)){
-            return $this;
-        }
-        $this->getStudiedGenuses()->removeElement($genus);
-        $genus->removeGenusScientist($this);
-        return $this;
-    }
-
-    /**
-     * @return GenusScientist[]|ArrayCollection|Collection
-     */
-    public function getStudiedGenuses(): Collection
-    {
-        return $this->studiedGenuses;
-    }
-
-    /**
-     * @return string
-     */
-    function __toString(): string
-    {
-        return $this->getFullName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstName(): string
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @param string $firstName
-     * @return User
-     */
-    public function setFirstName(string $firstName): User
-    {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * @param string $lastName
-     * @return User
-     */
-    public function setLastName(string $lastName): User
-    {
-        $this->lastName = $lastName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUniversity(): string
-    {
-        return $this->university;
-    }
-
-    /**
-     * @param mixed $university
-     * @return User
-     */
-    public function setUniversity(string $university = null): User
-    {
-        $this->university = $university;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isIsScientist(): bool
+    public function isScientist()
     {
         return $this->isScientist;
     }
 
-    /**
-     * @param bool $isScientist
-     * @return User
-     */
-    public function setIsScientist(bool $isScientist): User
+    public function setIsScientist($isScientist)
     {
         $this->isScientist = $isScientist;
-        return $this;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getAvatarUri()
+    {
+        return $this->avatarUri;
+    }
+
+    public function setAvatarUri($avatarUri)
+    {
+        $this->avatarUri = $avatarUri;
+    }
+
+    public function getUniversityName()
+    {
+        return $this->universityName;
+    }
+
+    public function setUniversityName($universityName)
+    {
+        $this->universityName = $universityName;
+    }
+
+    public function getFullName()
+    {
+        return trim($this->getFirstName().' '.$this->getLastName());
     }
 
     /**
-     * @return \DateTime
+     * @return ArrayCollection|GenusScientist[]
      */
-    public function getCreated()
+    public function getStudiedGenuses()
     {
-        return $this->created;
+        return $this->studiedGenuses;
     }
-
-    /**
-     * @param \DateTime $created
-     * @return User
-     */
-    public function setCreated(\DateTime $created): User
-    {
-        $this->created = $created;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdated(): \DateTime
-    {
-        return $this->updated;
-    }
-
-    /**
-     * @param \DateTime $updated
-     * @return User
-     */
-    public function setUpdated(\DateTime $updated): User
-    {
-        $this->updated = $updated;
-        return $this;
-    }
-
-
 }

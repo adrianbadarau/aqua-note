@@ -2,16 +2,18 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Genus;
 use AppBundle\Entity\SubFamily;
 use AppBundle\Entity\User;
 use AppBundle\Repository\SubFamilyRepository;
-use Doctrine\ORM\EntityRepository;
+use AppBundle\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenusFormType extends AbstractType
@@ -20,26 +22,30 @@ class GenusFormType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('speciesCount')
-            ->add('funFact')
-            ->add('isPublished')
-            ->add('subFamily', null, [
-                'placeholder' => 'Choose a subfamily',
+            ->add('subFamily', EntityType::class, [
+                'placeholder' => 'Choose a Sub Family',
                 'class' => SubFamily::class,
-                'query_builder' => function(SubFamilyRepository $repository){
-                    return $repository->createAlphabeticalQueryBuilder();
+                'query_builder' => function(SubFamilyRepository $repo) {
+                    return $repo->createAlphabeticalQueryBuilder();
                 }
             ])
-            ->add('firstDiscoveredAt', null,[
+            ->add('speciesCount')
+            ->add('funFact')
+            ->add('isPublished', ChoiceType::class, [
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ]
+            ])
+            ->add('firstDiscoveredAt', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'js-datepicker'
-                ],
+                'attr' => ['class' => 'js-datepicker'],
                 'html5' => false,
             ])
-            ->add('genusScientists', CollectionType::class,[
-                'entry_type' => GenusScientistEmbededForm::class,
+            ->add('genusScientists', CollectionType::class, [
+                'entry_type' => GenusScientistEmbeddedForm::class,
                 'allow_delete' => true,
+                'allow_add' => true,
                 'by_reference' => false,
             ])
         ;
@@ -48,12 +54,7 @@ class GenusFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Genus::class
+            'data_class' => 'AppBundle\Entity\Genus'
         ]);
-    }
-
-    public function getName()
-    {
-        return 'app_bundle_genus_form_type';
     }
 }

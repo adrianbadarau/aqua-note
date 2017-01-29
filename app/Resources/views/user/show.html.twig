@@ -1,4 +1,4 @@
-{% extends 'AppBundle::base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
     <div class="container">
@@ -30,16 +30,23 @@
                     </tr>
                     <tr>
                         <th>University</th>
-                        <td>{{ user.university|default('-') }}</td>
+                        <td>{{ user.universityName|default('-') }}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            	<h3>Genuses studied:</h3>
-                <ul>
+
+            <div class="col-xs-4">
+                <h3>Genus Studied</h3>
+                <ul class="list-group">
                     {% for genusScientist in user.studiedGenuses %}
-                        <li><a href="{{ path('genus_show', {'slug': genusScientist.genus.slug}) }}"> {{ genusScientist.genus.name }}</a></li>
+                        <li class="list-group-item">
+                            <a href="{{ path('genus_show', {
+                                'slug': genusScientist.genus.slug
+                            }) }}">
+                                {{ genusScientist.genus.name }}
+                            </a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Security("is_granted('ROLE_ADMIN')")
+ * @Security("is_granted('ROLE_MANAGE_GENUS')")
  * @Route("/admin")
  */
 class GenusAdminController extends Controller
@@ -20,61 +20,69 @@ class GenusAdminController extends Controller
      */
     public function indexAction()
     {
-//        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $genuses = $this->getDoctrine()
             ->getRepository('AppBundle:Genus')
             ->findAll();
 
-        return $this->render('AppBundle:admin/genus:list.html.twig', array(
+        return $this->render('admin/genus/list.html.twig', array(
             'genuses' => $genuses
         ));
     }
 
     /**
      * @Route("/genus/new", name="admin_genus_new")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
         $form = $this->createForm(GenusFormType::class);
 
+        // only handles data on POST
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $genus = $form->getData();
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($genus);
             $em->flush();
-            $this->addFlash('success', 'Genus successfully created by -'.$this->getUser()->getUserName());
+
+            $this->addFlash(
+                'success',
+                sprintf('Genus created by you: %s!', $this->getUser()->getEmail())
+            );
+
             return $this->redirectToRoute('admin_genus_list');
         }
-        return $this->render('AppBundle:admin/genus:new.html.twig', [
-            'genusForm' => $form->createView(),
-            'type' => 'New'
+
+        return $this->render('admin/genus/new.html.twig', [
+            'genusForm' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/genus/{id}/edit", name="admin_genus_edit")
-     * @param Genus $genus
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request,Genus $genus)
+    public function editAction(Request $request, Genus $genus)
     {
         $form = $this->createForm(GenusFormType::class, $genus);
+
+        // only handles data on POST
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $genus = $form->getData();
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($genus);
             $em->flush();
-            $this->addFlash('success', 'Genus successfully edited');
-            return $this->redirectToRoute('admin_genus_list');
+
+            $this->addFlash('success', 'Genus updated!');
+
+            return $this->redirectToRoute('admin_genus_edit', [
+                'id' => $genus->getId()
+            ]);
         }
-        return $this->render('AppBundle:admin/genus:new.html.twig',[
-            'genus' => $genus,
-            'genusForm' => $form->createView(),
-            'type' => 'Edit'
+
+        return $this->render('admin/genus/edit.html.twig', [
+            'genusForm' => $form->createView()
         ]);
     }
 }

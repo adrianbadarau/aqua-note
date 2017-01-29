@@ -1,21 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: adiba
- * Date: 25-Jan-17
- * Time: 20:31
- */
 
 namespace AppBundle\Repository;
 
-
+use AppBundle\Entity\Genus;
+use AppBundle\Entity\SubFamily;
 use Doctrine\ORM\EntityRepository;
 
 class SubFamilyRepository extends EntityRepository
 {
-    public function createAlphabeticalQueryBuilder(string $direction = 'ASC')
+    public function createAlphabeticalQueryBuilder()
     {
-        return $this->createQueryBuilder('subFamily')
-            ->addOrderBy('subFamily.name', $direction);
+        return $this->createQueryBuilder('sub_family')
+            ->orderBy('sub_family.name', 'ASC');
+    }
+
+    /**
+     * Helper method to return ANY SubFamily.
+     *
+     * This is mostly useful when playing and testing things.
+     *
+     * @return SubFamily
+     */
+    public function findAny()
+    {
+        return $this->createQueryBuilder('sub_family')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

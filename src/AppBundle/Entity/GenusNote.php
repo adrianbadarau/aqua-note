@@ -5,182 +5,96 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GenusNote
- *
- * @ORM\Table(name="genus_note")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenusNoteRepository")
+ * @ORM\Table(name="genus_note")
  */
 class GenusNote
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="userName", type="string", length=255)
+     * @ORM\Column(type="string")
      */
-    private $userName;
+    private $username;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="userAvatarFileName", type="string", length=255)
+     * @ORM\Column(type="string")
      */
-    private $userAvatarFileName;
+    private $userAvatarFilename;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="note", type="text")
+     * @ORM\Column(type="text")
      */
     private $note;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="createdAt", type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @var $genus Genus
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Genus", inversedBy="notes")
+     * @ORM\ManyToOne(targetEntity="Genus", inversedBy="notes")
      * @ORM\JoinColumn(nullable=false)
      */
     private $genus;
 
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
+    public function getUsername()
     {
-        return $this->id;
+        return $this->username;
     }
 
-    /**
-     * Set userName
-     *
-     * @param string $userName
-     *
-     * @return GenusNote
-     */
-    public function setUserName($userName)
+    public function setUsername($username)
     {
-        $this->userName = $userName;
-
-        return $this;
+        $this->username = $username;
     }
 
-    /**
-     * Get userName
-     *
-     * @return string
-     */
-    public function getUserName()
+    public function getUserAvatarFilename()
     {
-        return $this->userName;
+        return $this->userAvatarFilename;
     }
 
-    /**
-     * Set userAvatarFileName
-     *
-     * @param string $userAvatarFileName
-     *
-     * @return GenusNote
-     */
-    public function setUserAvatarFileName($userAvatarFileName)
+    public function setUserAvatarFilename($userAvatarFilename)
     {
-        $this->userAvatarFileName = $userAvatarFileName;
-
-        return $this;
+        $this->userAvatarFilename = $userAvatarFilename;
     }
 
-    /**
-     * Get userAvatarFileName
-     *
-     * @return string
-     */
-    public function getUserAvatarFileName()
-    {
-        return $this->userAvatarFileName;
-    }
-
-    /**
-     * Set note
-     *
-     * @param string $note
-     *
-     * @return GenusNote
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Get note
-     *
-     * @return string
-     */
     public function getNote()
     {
         return $this->note;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return GenusNote
-     */
-    public function setCreatedAt($createdAt)
+    public function setNote($note)
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        $this->note = $note;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    /**
-     * @return Genus
-     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
     public function getGenus()
     {
         return $this->genus;
     }
 
-    /**
-     * @param Genus $genus
-     * @return GenusNote
-     */
     public function setGenus(Genus $genus)
     {
         $this->genus = $genus;
-
-        return $this;
     }
 
-
+    public function getId()
+    {
+        return $this->id;
+    }
 }
